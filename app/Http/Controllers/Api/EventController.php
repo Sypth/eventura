@@ -8,11 +8,15 @@ use App\Http\Traits\CanLoadRelationships;
 use Illuminate\Http\Request;
 
 use App\Models\Event;
-use Illuminate\Validation\Rules\Can;
+use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
 {
     use CanLoadRelationships;
+
+    public function __construct(){
+        $this->middleware('auth:sanctum')->except(['index', 'show']);
+    }
 
     private array $relations = ['user', 'attendees', 'attendees.user'];
     /**
@@ -40,7 +44,7 @@ class EventController extends Controller
                 'start_time' => 'required|date',
                 'end_time' => 'required|date|after:start_time',
             ]),
-            'user_id' => 1
+            'user_id' => $request->user()->id
         ]);
 
         return new EventResource($this->loadRelationships($event));
