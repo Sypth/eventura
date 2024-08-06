@@ -8,6 +8,7 @@ use App\Http\Traits\CanLoadRelationships;
 use Illuminate\Http\Request;
 
 use App\Models\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
@@ -64,6 +65,11 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+//        if (Gate::denies('update-event', $event)) {
+//            abort(403, 'You are not authorized to update this event.');
+//        }
+        $this->authorize('update-event', $event);
+
         $event->update([
             ...$request->validate([
                 'name' => 'sometimes|string|max:255',
@@ -82,7 +88,6 @@ class EventController extends Controller
     public function destroy(Event $event)
     {
         $event->delete();
-
         return response(status: 204);
     }
 }
