@@ -9,4 +9,4 @@
 -   docker compose up
 -   php artisan make:policy ModelPolicy --model=Model
 -   php artisan make:controller SampleController --api
- 
+-   php artisan make:command CommandName
