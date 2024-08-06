@@ -15,6 +15,7 @@ class AttendeeController extends Controller
 
     public function __construct(){
         $this->middleware('auth:sanctum')->except(['index', 'show', 'update']);
+        $this->authorizeResource(Attendee::class, 'attendee');
     }
 
     private array $relations = ['event'];
@@ -69,7 +70,6 @@ class AttendeeController extends Controller
      */
     public function destroy(Event $event, Attendee $attendee)
     {
-        $this->authorize('delete-attendee', [$event, $attendee]);
         $attendee->delete();
 
         return response(status: 204);
